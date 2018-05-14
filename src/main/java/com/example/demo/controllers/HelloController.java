@@ -50,7 +50,7 @@ public class HelloController {
         String html = "<form method='post'>" +
                 "<input type='text' name='user' />" +
                 "<select name='lang'>" +
-                "<option value='en'>English</option>" +
+                "<option value='en' selected>English</option>" +
                 "<option value='fr'>French</option>" +
                 "<option value='es'>Spanish</option>" +
                 "<option value='pg'>Portuguese</option>" +
