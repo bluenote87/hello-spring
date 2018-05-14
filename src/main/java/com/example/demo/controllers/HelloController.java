@@ -70,16 +70,22 @@ public class HelloController {
         switch(lang) {
             case "en":
                 select = "Hello, ";
+                break;
             case "fr":
                 select = "Bonjour, ";
+                break;
             case "es":
                 select = "Hola, ";
+                break;
             case "pg":
                 select = "Olá, ";
+                break;
             case "gr":
                 select = "Guten tag, ";
+                break;
             case "kg":
                 select = "nuqneH, ";
+                break;
         }
         String html = "<h2>" + select + name + "!</h2>" +
                 "<img src='http://2.bp.blogspot.com/-3Lpva--N9pU/U1JJVvT7DFI/AAAAAAAAIYA/xn88y-DyKgI/s1600/Rockin+Worf.jpg' style='width: 249; height: 342;'>";
