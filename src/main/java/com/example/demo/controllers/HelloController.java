@@ -50,6 +50,7 @@ public class HelloController {
     @ResponseBody
     public static String createMessage(HttpServletResponse response,  HttpServletRequest request) {
         String nameValue = "";
+        String lastLang = "en";
         if (request.getCookies() == null) {
             Cookie enCookie = new Cookie("en","0");
             response.addCookie(enCookie);
@@ -65,25 +66,75 @@ public class HelloController {
             response.addCookie(kgCookie);
             Cookie totalCookie = new Cookie("total", "0");
             response.addCookie(totalCookie);
+            Cookie lastLangCookie = new Cookie("lastLang", "en");
+            response.addCookie(lastLangCookie);
         } else {
             Cookie[] valueCookie = request.getCookies();
             for (Cookie iteration : valueCookie) {
                 if (iteration.getName().contains("name")){
                     nameValue = iteration.getValue();
                 }
+                if (iteration.getName().contains("lastLang")) {
+                    lastLang = iteration.getValue();
+                }
             }
         }
         String html = "<form method='post'>" +
                 "<input type='text' name='user' value='" + nameValue + "'/>" +
-                "<select name='lang'>" +
-                "<option value='en' selected>English</option>" +
-                "<option value='fr'>French</option>" +
-                "<option value='es'>Spanish</option>" +
-                "<option value='pg'>Portuguese</option>" +
-                "<option value='gr'>German</option>" +
-                "<option value='kg'>Klingon</option>" +
-                "<input type='submit' value='Greet me!' />" +
-                "</form>";
+                "<select name='lang'>";
+        switch(lastLang) {
+            case "en":
+                html = html + "<option value='en' selected>English</option>" +
+                        "<option value='fr'>French</option>" +
+                        "<option value='es'>Spanish</option>" +
+                        "<option value='pg'>Portuguese</option>" +
+                        "<option value='gr'>German</option>" +
+                        "<option value='kg'>Klingon</option>";
+                break;
+            case "fr":
+                html = html + "<option value='en'>English</option>" +
+                        "<option value='fr' selected>French</option>" +
+                        "<option value='es'>Spanish</option>" +
+                        "<option value='pg'>Portuguese</option>" +
+                        "<option value='gr'>German</option>" +
+                        "<option value='kg'>Klingon</option>";
+                break;
+            case "es":
+                html = html + "<option value='en'>English</option>" +
+                        "<option value='fr'>French</option>" +
+                        "<option value='es' selected>Spanish</option>" +
+                        "<option value='pg'>Portuguese</option>" +
+                        "<option value='gr'>German</option>" +
+                        "<option value='kg'>Klingon</option>";
+                break;
+            case "pg":
+                html = html + "<option value='en'>English</option>" +
+                        "<option value='fr'>French</option>" +
+                        "<option value='es'>Spanish</option>" +
+                        "<option value='pg' selected>Portuguese</option>" +
+                        "<option value='gr'>German</option>" +
+                        "<option value='kg'>Klingon</option>";
+                break;
+            case "gr":
+                html = html + "<option value='en'>English</option>" +
+                        "<option value='fr'>French</option>" +
+                        "<option value='es'>Spanish</option>" +
+                        "<option value='pg'>Portuguese</option>" +
+                        "<option value='gr' selected>German</option>" +
+                        "<option value='kg'>Klingon</option>";
+                break;
+            case "kg":
+                html = html + "<option value='en'>English</option>" +
+                        "<option value='fr'>French</option>" +
+                        "<option value='es'>Spanish</option>" +
+                        "<option value='pg'>Portuguese</option>" +
+                        "<option value='gr'>German</option>" +
+                        "<option value='kg' selected>Klingon</option>";
+                break;
+        }
+
+        html = html + "<input type='submit' value='Greet me!' /></form>";
+
         return html;
 
     }
@@ -141,6 +192,8 @@ public class HelloController {
 
         Cookie nameCookie = new Cookie("name", name);
         response.addCookie(nameCookie);
+        Cookie langCookie = new Cookie("lastLang", lang);
+        response.addCookie(langCookie);
 
 
         String html = "<h2>" + select + name + "!</h2>" +
