@@ -15,16 +15,49 @@ import javax.servlet.http.Cookie;
 @Controller
 public class HelloController {
 
+
+
     @RequestMapping(value = "")
     @ResponseBody
-    public String index(HttpServletRequest request) {
-
+    public String index(HttpServletRequest request, HttpServletResponse response) {
         String userName = request.getParameter("name");
-
-        if (userName == null) {
+        if ((request.getCookies() == null && userName == null) || (request.getCookies() == null && userName == "")) {
+            userName = "World";
+            Cookie enCookie = new Cookie("en","0");
+            response.addCookie(enCookie);
+            Cookie frCookie = new Cookie("fr","0");
+            response.addCookie(frCookie);
+            Cookie esCookie = new Cookie("es","0");
+            response.addCookie(esCookie);
+            Cookie pgCookie = new Cookie("pg","0");
+            response.addCookie(pgCookie);
+            Cookie grCookie = new Cookie("gr","0");
+            response.addCookie(grCookie);
+            Cookie kgCookie = new Cookie("kg","0");
+            response.addCookie(kgCookie);
+            Cookie totalCookie = new Cookie("total", "0");
+            response.addCookie(totalCookie);
+            Cookie lastLangCookie = new Cookie("lastLang", "en");
+            response.addCookie(lastLangCookie);
+            Cookie nameCookie = new Cookie("name", null);
+            response.addCookie(nameCookie);
+        } else {
+            Cookie[] valueCookie = request.getCookies();
+            for (Cookie iteration : valueCookie) {
+                if (iteration.getName().contains("name")) {
+                    userName = iteration.getValue();
+                }
+            }
+        }
+        if (userName == "") {
             userName = "World";
         }
-        return "Hello, " + userName;
+
+        String html = "<p>Hello, " + userName + "</p>" +
+                "<p><a href='/hello'>Say hello to someone.</a></p>" +
+                "<p><a href='/greeting'>Greet me in multiple languages.</a></p>" +
+                "<p><a href='/goodbye'>Say 'goodbye' for now.</a></p>";
+        return html;
     }
 
     @RequestMapping(value = "hello", method=RequestMethod.GET)
@@ -40,10 +73,12 @@ public class HelloController {
 
     @RequestMapping(value = "hello", method=RequestMethod.POST)
     @ResponseBody
-    public String helloPost(HttpServletRequest request) {
+    public String helloPost(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("name");
-
-        return "Hello " + name;
+        Cookie nameCookie = new Cookie("name", name);
+        response.addCookie(nameCookie);
+        String html = "<p>Hello " + name + "</p><p><a href='/'>Go to index.</a></p>";
+        return html;
     }
 
     @RequestMapping(value = "greeting", method=RequestMethod.GET)
@@ -68,6 +103,8 @@ public class HelloController {
             response.addCookie(totalCookie);
             Cookie lastLangCookie = new Cookie("lastLang", "en");
             response.addCookie(lastLangCookie);
+            Cookie nameCookie = new Cookie("name", null);
+            response.addCookie(nameCookie);
         } else {
             Cookie[] valueCookie = request.getCookies();
             for (Cookie iteration : valueCookie) {
@@ -203,20 +240,69 @@ public class HelloController {
         }
         html = html + "<p>You viewed this page in " + currentLang + " " + currentLangView + " time(s) " +
                 "and you have seen this greeting in any language " + totalView + " time(s)." +
-                "<p><a href='/greeting'>Greet me again!</a></p>";
+                "<p><a href='/greeting'>Greet me again!</a></p><p><a href='/'>Go to index.</a></p>";
 
         return html;
     }
 
     @RequestMapping(value="hello/{name}")
     @ResponseBody
-    public String helloUrlSegment(@PathVariable String name) {
-        return "Hello " + name;
-    }
+    public String helloUrlSegment(@PathVariable String name, HttpServletResponse response, HttpServletRequest request) {
+
+        if (request.getCookies() != null) {
+            Cookie[] valueCookie = request.getCookies();
+            for (Cookie iteration : valueCookie) {
+                if (iteration.getName().contains("name")) {
+                    Cookie nameCookie = new Cookie("name", name);
+                    nameCookie.setPath("/");
+                    response.addCookie(nameCookie);
+                }
+            }
+        } else {
+            Cookie enCookie = new Cookie("en","0");
+            enCookie.setPath("/");
+            response.addCookie(enCookie);
+            Cookie frCookie = new Cookie("fr","0");
+            frCookie.setPath("/");
+            response.addCookie(frCookie);
+            Cookie esCookie = new Cookie("es","0");
+            esCookie.setPath("/");
+            response.addCookie(esCookie);
+            Cookie pgCookie = new Cookie("pg","0");
+            pgCookie.setPath("/");
+            response.addCookie(pgCookie);
+            Cookie grCookie = new Cookie("gr","0");
+            grCookie.setPath("/");
+            response.addCookie(grCookie);
+            Cookie kgCookie = new Cookie("kg","0");
+            kgCookie.setPath("/");
+            response.addCookie(kgCookie);
+            Cookie totalCookie = new Cookie("total", "0");
+            totalCookie.setPath("/");
+            response.addCookie(totalCookie);
+            Cookie lastLangCookie = new Cookie("lastLang", "en");
+            lastLangCookie.setPath("/");
+            response.addCookie(lastLangCookie);
+            Cookie nameCookie = new Cookie("name", name);
+            nameCookie.setPath("/");
+            response.addCookie(nameCookie);
+        }
+
+        return "Hello " + name + "<p><a href='/'>Go to index.</a></p>";
+        }
 
     @RequestMapping(value = "goodbye")
-    public String goodbye() {
-
+    public String goodbye(HttpServletResponse response, HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            Cookie[] myCookies = request.getCookies();
+            for (Cookie iteration : myCookies) {
+                if (iteration.getName().contains("name")) {
+                    iteration.setValue("");
+                    iteration.setPath("/");
+                    response.addCookie(iteration);
+                }
+            }
+        }
         return "redirect:/";
     }
 
