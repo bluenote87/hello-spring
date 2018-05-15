@@ -196,12 +196,15 @@ public class HelloController {
         response.addCookie(langCookie);
 
 
-        String html = "<h2>" + select + name + "!</h2>" +
-                "<img src='http://2.bp.blogspot.com/-3Lpva--N9pU/U1JJVvT7DFI/AAAAAAAAIYA/xn88y-DyKgI/s1600/Rockin+Worf.jpg'" +
-                "style='width: 249; height: 342;'>" +
-                "<p>You viewed this page in " + currentLang + " " + currentLangView + " time(s) " +
+        String html = "<h2>" + select + name + "!</h2>";
+        if (lang.contains("kg")) {
+            html = html + "<img src='http://2.bp.blogspot.com/-3Lpva--N9pU/U1JJVvT7DFI/AAAAAAAAIYA/xn88y-DyKgI/s1600/Rockin+Worf.jpg'" +
+                    "style='width: 249; height: 342;'>";
+        }
+        html = html + "<p>You viewed this page in " + currentLang + " " + currentLangView + " time(s) " +
                 "and you have seen this greeting in any language " + totalView + " time(s)." +
                 "<p><a href='/greeting'>Greet me again!</a></p>";
+
         return html;
     }
 
